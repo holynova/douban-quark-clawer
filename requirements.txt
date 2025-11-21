@@ -1,0 +1,6 @@
+requests
+beautifulsoup4
+selenium
+lxml
+fake-useragent
+webdriver-manager
