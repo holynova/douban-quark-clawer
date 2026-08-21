@@ -1,5 +1,9 @@
 # Douban Quark Crawler (豆瓣夸克资源自动搜刮器)
 
+
+![Screenshot](./screenshot.png)
+
+
 这是一个全自动化的 Python 工具，用于批量查找用户豆瓣“想看”列表中的电影/剧集资源，并自动将其保存到您的夸克网盘中。
 
 ## 功能特点
