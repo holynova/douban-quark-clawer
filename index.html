@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="豆瓣夸克资源自动搜刮器：批量读取豆瓣想看列表并搜索夸克资源。" />
+    <title>豆瓣夸克资源自动搜刮器</title>
+    <style>
+      :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f4f1eb; color: #27231f; }
+      main { width: min(720px, calc(100% - 40px)); padding: 48px 0; }
+      h1 { margin: 0 0 16px; font-size: clamp(2rem, 6vw, 4rem); letter-spacing: -0.04em; }
+      p { line-height: 1.75; }
+      .card { padding: 28px; border: 1px solid #d8d0c6; border-radius: 20px; background: #fffdf9; box-shadow: 0 16px 40px #4b362012; }
+      code { padding: 2px 6px; border-radius: 6px; background: #eee8df; }
+      a { color: #9b3d22; }
+      pre { overflow-x: auto; padding: 16px; border-radius: 12px; background: #27231f; color: #fff9ef; }
+      small { color: #71685f; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <p><small>Douban Quark Crawler</small></p>
+        <h1>豆瓣夸克资源自动搜刮器</h1>
+        <p>这是一个本地运行的 Python CLI：读取豆瓣“想看”列表，搜索夸克网盘资源，并把结果保存到 <code>output/</code>。</p>
+        <p>它依赖本机 Python、Chrome 和网络环境；此页面只提供项目说明，不在 Cloudflare Worker 中运行浏览器自动化。</p>
+        <pre>python main.py https://movie.douban.com/people/YOUR_ID/wish</pre>
+        <p><a href="https://github.com/holynova/douban-quark-clawer">查看源代码与完整使用说明 →</a></p>
+      </div>
+    </main>
+  </body>
+</html>

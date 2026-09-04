@@ -1,5 +1,7 @@
 # Douban Quark Crawler (豆瓣夸克资源自动搜刮器)
 
+项目说明页：<https://douban-quark-clawer.xiaosang.cc/> · GitHub Pages：<https://holynova.github.io/douban-quark-clawer/>
+
 
 ![Screenshot](./screenshot.png)
 

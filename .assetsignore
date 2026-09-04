@@ -1,0 +1,12 @@
+.git
+.github
+.wrangler
+.env*
+__pycache__
+.venv
+venv
+output
+debug_search.html
+debug_search_error.png
+requirements.txt
+*.py
