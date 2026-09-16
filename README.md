@@ -4,7 +4,7 @@
 ![Screenshot](./screenshot.png)
 
 
-这是一个全自动化的 Python 工具，用于批量查找用户豆瓣“想看”列表中的电影/剧集资源，并自动将其保存到您的夸克网盘中。
+这是一个全自动化的 Python 工具，用于批量查找用户豆瓣“想看”列表中的电影/剧集资源，并将搜索结果保存为本地 JSON 文件。当前实现不登录夸克网盘，也不执行自动转存。
 
 ## 功能特点
 
@@ -23,7 +23,9 @@
 1.  克隆或下载本项目代码。
 2.  安装依赖库：
     ```bash
-    pip install -r requirements.txt
+    python3 -m venv .venv
+    source .venv/bin/activate
+    python -m pip install -r requirements.txt
     ```
 
 ## 使用方法
@@ -39,6 +41,8 @@
     程序会自动遍历您的想看列表，搜索资源。
     *   搜索过程中会实时打印进度。
     *   完成后，您可以在 `output/` 目录下找到 `wishlist.json` 和 `quark_links.json`。
+
+程序会打开可见的 Chrome 窗口进行搜索。若没有抓到想看列表，会直接退出；先确认输入的列表可公开访问。
 
 ## 输出文件
 
