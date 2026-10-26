@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">Douban Quark Crawler (豆瓣夸克资源自动搜刮器)</title>
+  <desc id="desc">这是一个全自动化的 Python 工具，用于批量查找用户豆瓣“想看”列表中的电影/剧集资源，并将搜索结果保存为本地 JSON 文件。当前实现不登录夸克网盘，也不执行自动转存。</desc>
+  <rect width="1200" height="360" rx="28" fill="#12171d"/>
+  <path d="M0 310C250 280 410 342 650 300s350-18 550 20v40H0Z" fill="#7da2a7" opacity=".12"/>
+  <text x="58" y="52" fill="#ca7b49" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" letter-spacing="2.5">WISHLIST · SEARCH · JSON</text>
+  <path d="M58 70H710" stroke="#7da2a7" stroke-width="2" opacity=".6"/>
+  <text x="58" y="126" fill="#edf0e9" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="52" font-weight="700">Douban Quark Crawler</text><text x="58" y="178" fill="#edf0e9" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="52" font-weight="700">(豆瓣夸克资源自动搜刮器)</text>
+  <text x="60" y="242" fill="#7da2a7" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="21">这是一个全自动化的 Python</text><text x="60" y="272" fill="#7da2a7" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="21">工具，用于批量查找用户豆瓣“想看”列表中的电影/剧集资源，并将搜索结…</text>
+    <g transform="translate(60 300)"><rect width="250" height="34" rx="17" fill="#ca7b49"/><text x="18" y="23" fill="#12171d" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14">PROJECT-NATIVE README</text></g>
+  <g transform="translate(790 52)"><rect width="350" height="248" rx="16" fill="#edf0e9"/><circle cx="28" cy="26" r="6" fill="#ca7b49"/><circle cx="50" cy="26" r="6" fill="#7da2a7"/><circle cx="72" cy="26" r="6" fill="#d5d6ce"/><path d="M32 78h180M32 112h260M32 146h212M32 180h174" stroke="#7da2a7" stroke-width="7" stroke-linecap="round" opacity=".9"/><path d="M34 218h22" stroke="#ca7b49" stroke-width="8" stroke-linecap="round"/></g>
+</svg>
