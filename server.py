@@ -94,7 +94,11 @@ def make_handler(library, jobs):
                         if not isinstance(raw, list) or any(not quark_url(v) for v in raw):
                             raise ValueError('请输入有效的 pan.quark.cn/s/ 或 drive.quark.cn/s/ 分享链接。')
                         links = list(dict.fromkeys(quark_url(v) for v in raw))
-                        values.update(quark_links=links, status='found' if links else 'pending', error='')
+                        item = next((i for i in library.snapshot()['items'] if i['id'] == str(data.get('id'))), None)
+                        if item is None:
+                            raise ValueError('找不到这部影片。')
+                        if links != item['quark_links']:
+                            values.update(quark_links=links, status='found' if links else 'pending', error='')
                     if 'note' in data:
                         values['note'] = str(data['note'])[:2000]
                     library.update(str(data.get('id')), **values)
@@ -110,6 +114,7 @@ def make_handler(library, jobs):
 
 def main():
     parser = argparse.ArgumentParser(description='想看 · 豆瓣与夸克本地工作台')
+    parser.add_argument('--open', action='store_true', help='启动后打开浏览器')
     parser.add_argument('--port', type=int, default=8765)
     parser.add_argument('--data-dir', type=Path, default=ROOT / 'output')
     args = parser.parse_args()
@@ -117,6 +122,10 @@ def main():
     jobs = Jobs(library)
     server = ThreadingHTTPServer(('127.0.0.1', args.port), make_handler(library, jobs))
     print(f'想看工作台已启动：http://127.0.0.1:{args.port}', flush=True)
+    if args.open:
+        import threading
+        import webbrowser
+        threading.Timer(.3, lambda: webbrowser.open(f'http://127.0.0.1:{args.port}')).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:

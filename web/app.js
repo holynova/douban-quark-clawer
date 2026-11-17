@@ -41,12 +41,12 @@ function render() {
   $('#movie-list').innerHTML=visible.map(i=>{
     const index=items.indexOf(i)+1;
     const search='https://www.google.com/search?q='+encodeURIComponent('"'+i.title+'" 夸克');
-    return `<article class="movie"><div class="movie-number" aria-hidden="true">${String(index).padStart(2,'0')}<small>FILM</small></div><div><h3>${esc(i.title)}</h3><div class="movie-meta"><span class="badge ${i.status}">${labels[i.status]}</span>${i.year?`<span>${esc(i.year)}</span>`:''}${i.douban_url?`<a href="${esc(i.douban_url)}" target="_blank" rel="noopener noreferrer">豆瓣 ↗</a>`:''}${i.quark_links.length?`<span>${i.quark_links.length} 条候选链接</span>`:''}</div>${i.error?`<p class="movie-error">${esc(i.error)}</p>`:''}${i.note?`<p class="movie-note">${esc(i.note)}</p>`:''}<div class="movie-links">${i.quark_links.map((l,n)=>`<a href="${esc(l)}" target="_blank" rel="noopener noreferrer">夸克链接 ${n+1} ↗</a>`).join('')}</div></div><div class="movie-actions">${i.quark_links.length?`<button data-copy="${i.id}">复制链接</button>`:`<a href="${esc(search)}" target="_blank" rel="noopener noreferrer">手动搜索 ↗</a>`}<button data-edit="${i.id}" ${job.active?'disabled':''}>整理</button></div></article>`;
+    return `<article class="movie"><div class="movie-number" aria-hidden="true">${String(index).padStart(2,'0')}<small>影片</small></div><div><h3>${esc(i.title)}</h3><div class="movie-meta"><span class="badge ${i.status}">${labels[i.status]}</span>${i.year?`<span>${esc(i.year)}</span>`:''}${i.douban_url?`<a href="${esc(i.douban_url)}" target="_blank" rel="noopener noreferrer">豆瓣 ↗</a>`:''}${i.quark_links.length?`<span>${i.quark_links.length} 条候选链接</span>`:''}</div>${i.error?`<p class="movie-error">${esc(i.error)}</p>`:''}${i.note?`<p class="movie-note">${esc(i.note)}</p>`:''}<div class="movie-links">${i.quark_links.map((l,n)=>`<a href="${esc(l)}" target="_blank" rel="noopener noreferrer">夸克链接 ${n+1} ↗</a>`).join('')}</div></div><div class="movie-actions">${i.quark_links.length?`<button data-copy="${i.id}">复制链接</button>`:`<a href="${esc(search)}" target="_blank" rel="noopener noreferrer">手动搜索 ↗</a>`}<button data-edit="${i.id}" ${job.active?'disabled':''}>整理</button></div></article>`;
   }).join('');
 }
 async function refresh(){
-  try {state=await api('state');render();$('#connection').textContent='● 本地服务已连接 · 自动保存';}
-  catch(error){$('#connection').textContent='连接中断 · 请确认 python server.py 正在运行';}
+  try {state=await api('state');render();$('#offline').hidden=true;$('#open-import').disabled=false;$('#connection').textContent='● 本地服务已连接 · 自动保存';}
+  catch(error){$('#offline').hidden=false;['run','retry','pause','open-import'].forEach(id=>$('#'+id).disabled=true);$('#connection').textContent='连接中断 · 请确认 python server.py 正在运行';}
 }
 function openImport(){ $('#import-error').textContent='';$('#import-dialog').showModal(); }
 $('#open-import').onclick=openImport;$('#empty-import').onclick=openImport;
@@ -54,7 +54,7 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.datas
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{
   mode=b.dataset.mode;
   document.querySelectorAll('[data-mode]').forEach(t=>t.setAttribute('aria-pressed',String(t===b)));
-  document.querySelectorAll('[data-pane]').forEach(p=>p.hidden=p.dataset.pane!==mode);
+  document.querySelectorAll('[data-pane]').forEach(p=>{p.hidden=p.dataset.pane!==mode;p.querySelectorAll('input,textarea,select').forEach(c=>c.disabled=p.hidden);});
   $('#import-error').textContent='';
 });
 $('#import-form').onsubmit=async event=>{

@@ -162,6 +162,15 @@ class ApiTests(unittest.TestCase):
         with urlopen(self.base+'/api/export.csv') as r:csv=r.read().decode('utf-8-sig')
         self.assertIn("'=1+1",csv)
 
+    def test_note_edit_preserves_search_result_status(self):
+        self.lib.merge([{'title':'A','status':'empty'}])
+        item=self.lib.snapshot()['items'][0]
+        with self.post('/api/item',{'id':item['id'],'note':'周末看','quark_links':[]}) as r:
+            self.assertEqual(r.status,200)
+        saved=self.lib.snapshot()['items'][0]
+        self.assertEqual(saved['status'],'empty')
+        self.assertEqual(saved['note'],'周末看')
+
     def test_cross_origin_rejected(self):
         with self.assertRaises(HTTPError) as error:
             self.post('/api/import',{'items':['A']},{'Origin':'https://evil.com'})
