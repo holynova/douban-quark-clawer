@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">豆瓣夸克搜刮器 Douban Quark Crawler — 豆瓣想看列表 → 夸克网盘链接</title>
+  <desc id="desc">深色终端风标题：豆瓣夸克搜刮器；右侧是三步流水线：豆瓣想看列表、Google 搜索、quark_links.json 输出，下方是运行命令。</desc>
+
+  <rect width="1200" height="360" rx="26" fill="#161a22"/>
+
+  <g id="title-block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="56" y="62" font-size="19" letter-spacing="3" fill="#7fd08a">PYTHON CLI · SELENIUM 自动化</text>
+    <text x="56" y="128" font-size="62" font-weight="700" fill="#f2f4f8">豆瓣夸克搜刮器</text>
+    <text x="56" y="168" font-size="23" fill="#c8d0dc">DOUBAN QUARK CRAWLER — 想看列表 → 夸克网盘链接</text>
+    <text x="56" y="204" font-size="19" fill="#98a4b3">批量读豆瓣想看，Google 搜夸克分享链接，存为 JSON。</text>
+    <g id="chips" font-size="18" fill="#dfe5ee" text-anchor="middle">
+      <g><rect x="56" y="238" width="138" height="36" rx="18" fill="#222836" stroke="#39414f" stroke-width="1.5"/><text x="125" y="262">Python 3.8+</text></g>
+      <g><rect x="206" y="238" width="190" height="36" rx="18" fill="#222836" stroke="#39414f" stroke-width="1.5"/><text x="301" y="262">Selenium + Chrome</text></g>
+      <g><rect x="408" y="238" width="126" height="36" rx="18" fill="#222836" stroke="#39414f" stroke-width="1.5"/><text x="471" y="262">无需登录夸克</text></g>
+      <g><rect x="546" y="238" width="120" height="36" rx="18" fill="#222836" stroke="#39414f" stroke-width="1.5"/><text x="606" y="262">JSON 输出</text></g>
+    </g>
+  </g>
+
+  <g id="pipeline" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <g id="step1">
+      <rect x="740" y="48" width="404" height="62" rx="10" fill="#222836" stroke="#3d4657" stroke-width="1.5"/>
+      <text x="798" y="74" font-size="20" font-weight="700" fill="#e8ecf4">豆瓣想看列表</text>
+      <text x="798" y="98" font-size="18" fill="#98a4b3">requests + BeautifulSoup · 自动翻页</text>
+      <g id="num1">
+        <rect x="757" y="64" width="30" height="30" rx="15" fill="#7fd08a"/>
+        <text x="772" y="85" font-size="18" font-weight="700" fill="#161a22" text-anchor="middle">1</text>
+      </g>
+    </g>
+    <polygon points="942,114 934,128 950,128" fill="#7fd08a"/>
+    <g id="step2">
+      <rect x="740" y="132" width="404" height="62" rx="10" fill="#222836" stroke="#3d4657" stroke-width="1.5"/>
+      <text x="798" y="158" font-size="20" font-weight="700" fill="#e8ecf4">Google 搜索</text>
+      <text x="798" y="182" font-size="18" fill="#98a4b3">Selenium · “片名” + 夸克 · 验证码等待</text>
+      <g id="num2">
+        <rect x="757" y="148" width="30" height="30" rx="15" fill="#7fd08a"/>
+        <text x="772" y="169" font-size="18" font-weight="700" fill="#161a22" text-anchor="middle">2</text>
+      </g>
+    </g>
+    <polygon points="942,198 934,212 950,212" fill="#7fd08a"/>
+    <g id="step3">
+      <rect x="740" y="216" width="404" height="62" rx="10" fill="#222836" stroke="#3d4657" stroke-width="1.5"/>
+      <text x="798" y="242" font-size="20" font-weight="700" fill="#e8ecf4">quark_links.json</text>
+      <text x="798" y="266" font-size="18" fill="#98a4b3">output/ · 每片的夸克链接清单</text>
+      <g id="num3">
+        <rect x="757" y="232" width="30" height="30" rx="15" fill="#7fd08a"/>
+        <text x="772" y="253" font-size="18" font-weight="700" fill="#161a22" text-anchor="middle">3</text>
+      </g>
+    </g>
+    <g id="cmd">
+      <rect x="740" y="296" width="404" height="38" rx="8" fill="#0d1117"/>
+      <text x="758" y="321" font-size="18" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" fill="#7fd08a">$ python main.py &lt;想看列表 URL&gt;</text>
+    </g>
+  </g>
+</svg>
