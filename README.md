@@ -1,58 +1,57 @@
-# Douban Quark Crawler (豆瓣夸克资源自动搜刮器)
+<p align="right"><a href="README.en.md">English</a></p>
 
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="豆瓣夸克搜刮器 Douban Quark Crawler — 三步流水线：豆瓣想看列表 → Google 搜索 → quark_links.json">
+</p>
 
-![Screenshot](./screenshot.png)
+<p align="center">
+  <a href="https://douban-quark-clawer.xiaosang.cc/">▶ 项目主页</a>
+  ·
+  <a href="https://github.com/holynova/douban-quark-clawer">GitHub 仓库</a>
+</p>
 
+全自动化的 Python 命令行工具：批量读取你的豆瓣"想看"列表，逐片在 Google 上搜索夸克网盘分享链接，把结果存为 JSON。主流程只做搜索与导出，不登录夸克网盘。
 
-这是一个全自动化的 Python 工具，用于批量查找用户豆瓣“想看”列表中的电影/剧集资源，并自动将其保存到您的夸克网盘中。
+## 工作流程
 
-## 功能特点
-
-*   **自动化获取**: 自动抓取指定豆瓣用户的“想看”列表（支持翻页），并保存为 `output/wishlist.json`。
-*   **智能搜索**: 使用 Selenium 模拟浏览器在 Google 上搜索夸克网盘分享链接。
-*   **数据导出**: 将搜索到的夸克网盘链接保存为 `output/quark_links.json`。
-*   **无需登录**: 仅进行搜索和提取，不需要登录夸克网盘。
-
-## 环境要求
-
-*   Python 3.8+
-*   Google Chrome 浏览器
-
-## 安装步骤
-
-1.  克隆或下载本项目代码。
-2.  安装依赖库：
-    ```bash
-    pip install -r requirements.txt
-    ```
+1. **抓想看列表** — `requests` + BeautifulSoup 抓取指定豆瓣用户的"想看"列表，自动翻页，存为 `output/wishlist.json`。
+2. **逐片搜链接** — Selenium 驱动 Chrome，在 Google 搜索 `"片名" 夸克`，用正则从结果页提取 `pan.quark.cn/s/...` 分享链接；片与片之间停 2 秒，每 10 片存一次中间结果。
+3. **导出 JSON** — 汇总存为 `output/quark_links.json`，每条是 `{title, quark_links}`；中途按 Ctrl+C 或出错时也会保存已搜到的进度。
 
 ## 使用方法
 
-1.  **运行程序**:
-    在终端中运行 `main.py`，并传入您的豆瓣“想看”列表 URL：
-    ```bash
-    python main.py https://movie.douban.com/people/YOUR_ID/wish
-    ```
-    *例如*: `python main.py https://movie.douban.com/people/mobile_sang/wish`
+环境要求：Python 3.8+、Google Chrome（能访问 Google 的网络）。
 
-2.  **等待完成**:
-    程序会自动遍历您的想看列表，搜索资源。
-    *   搜索过程中会实时打印进度。
-    *   完成后，您可以在 `output/` 目录下找到 `wishlist.json` 和 `quark_links.json`。
+```bash
+pip install -r requirements.txt
+python main.py https://movie.douban.com/people/YOUR_ID/wish
+```
 
-## 输出文件
+跑完后在 `output/` 里看两个文件：
 
-*   `output/wishlist.json`: 包含所有抓取到的电影/剧集名称。
-*   `output/quark_links.json`: 包含电影名称及其对应的夸克网盘搜索结果链接。
+- `wishlist.json` — 想看列表里的全部片名。
+- `quark_links.json` — 每部片名及其搜到的夸克网盘链接。
 
 ## 注意事项
 
-*   **Google 访问**: 本工具依赖 Google 搜索，请确保您的网络环境可以访问 Google。
-*   **验证码**: 如果搜索过于频繁，Google 可能会弹出验证码。此时程序可能会暂停或失败，建议稍后重试。
+- **验证码**：搜得太频繁时 Google 可能弹验证码；程序会暂停并等你手动在浏览器里解开（最长等 5 分钟），解开后自动继续。
+- **反检测**：浏览器默认以可见模式运行（非 headless），随机 User-Agent，并隐藏了 `navigator.webdriver` 标记。
+- **转存功能**：`modules/quark_automator.py` 提供夸克登录与"转存到网盘"的 Selenium 操作类，但**未接入 `main.py` 主流程**——主流程只搜索并导出链接，不做转存。
 
-## 文件结构
+## 技术
 
-*   `main.py`: 主程序入口。
-*   `config.py`: 配置文件（URL、选择器等）。
-*   `modules/`: 功能模块（豆瓣抓取、搜索、自动化）。
-*   `utils/`: 工具函数（日志、浏览器驱动）。
+- Python + requests / BeautifulSoup（豆瓣抓取）+ Selenium + webdriver-manager（Chrome 驱动自动管理）。
+- 链接匹配：`pan.quark.cn/s/...` 或 `drive.quark.cn/s/...`（`config.py` 里的正则）。
+- 日志同时写控制台与 `app.log`；`verify_douban.py` / `verify_search.py` 是两个独立的冒烟自检脚本。
+
+```
+main.py                   入口：两阶段流程 + 进度保存
+config.py                 配置：UA 列表、搜索后缀、夸克链接正则
+modules/douban.py         抓取豆瓣想看列表（自动翻页）
+modules/search.py         Selenium 谷歌搜索 + 提取夸克链接 + 验证码等待
+modules/quark_automator.py 夸克登录与转存操作类（未接入主流程）
+utils/driver.py           Chrome 驱动（反检测配置）
+utils/logger.py           日志（控制台 + app.log）
+verify_*.py               冒烟自检脚本
+requirement.md            原始需求提示词（设计文档）
+```
