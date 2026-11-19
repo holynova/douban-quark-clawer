@@ -1,103 +1,63 @@
-import sys
-import time
+"""Legacy CLI, now sharing the resumable workbench library."""
+import argparse
 import json
-import os
-from utils.logger import setup_logger
-from utils.driver import get_driver
-from modules.douban import get_wishlist
-from modules.search import search_quark_links
+import time
+from pathlib import Path
+from modules.library import Library
+from modules.jobs import Jobs
 
-logger = setup_logger()
-
-def ensure_output_dir():
-    if not os.path.exists("output"):
-        os.makedirs("output")
-
-def save_to_json(data, filename):
-    filepath = os.path.join("output", filename)
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-    logger.info(f"Saved data to {filepath}")
 
 def main():
-    logger.info("Starting Douban Quark Crawler...")
-    
-    if len(sys.argv) < 2:
-        logger.error("Usage: python main.py <douban_user_wishlist_url>")
-        print("Example: python main.py https://movie.douban.com/people/your_id/wish")
-        sys.exit(1)
-    
-    user_url = sys.argv[1]
-    logger.info(f"Target User URL: {user_url}")
-
-    ensure_output_dir()
-
-    # Phase 1: Get Wishlist
-    movies = get_wishlist(user_url)
-    if not movies:
-        logger.error("No movies found or failed to scrape wishlist.")
-        sys.exit(1)
-        
-    logger.info(f"Found {len(movies)} movies in wishlist.")
-    
-    # Save Wishlist to JSON
-    save_to_json(movies, "wishlist.json")
-
-    # Initialize Driver
-    logger.info("Initializing Browser for Search...")
-    driver = get_driver(headless=False) # Keep visible to avoid some bot detection, or switch to True if preferred
-    
+    parser = argparse.ArgumentParser(description='豆瓣想看 → 夸克候选链接（支持断点续跑）')
+    parser.add_argument('url', nargs='?', help='公开的豆瓣想看 URL；省略时继续已有片单')
+    parser.add_argument('--limit', type=int, default=300)
+    parser.add_argument('--import-file', type=Path, help='导入旧版或新版 JSON')
+    parser.add_argument('--retry', action='store_true', help='重试失败、等待验证和未找到的影片')
+    parser.add_argument('--output', type=Path, default=Path(__file__).resolve().parent / 'output')
+    args = parser.parse_args()
+    if not 1 <= args.limit <= 1000:
+        parser.error('--limit 应为 1–1000')
+    library = Library(args.output / 'library.json')
+    jobs = Jobs(library)
+    def wait():
+        previous = ''
+        while jobs.snapshot()['active']:
+            message = jobs.snapshot()['message']
+            if message != previous:
+                print(message, flush=True)
+                previous = message
+            time.sleep(.2)
+        print(jobs.snapshot()['message'], flush=True)
     try:
-        # Phase 2: Search Loop
-        results = []
-        
-        for i, movie in enumerate(movies):
-            logger.info(f"[{i+1}/{len(movies)}] Searching: {movie}")
-            
-            # Search
-            links = search_quark_links(movie, driver=driver)
-            
-            movie_result = {
-                "title": movie,
-                "quark_links": links
-            }
-            results.append(movie_result)
-            
-            if links:
-                logger.info(f"Found {len(links)} links for {movie}")
-            else:
-                logger.warning(f"No links found for {movie}")
-            
-            # Save intermediate results periodically (optional, but good for long runs)
-            if (i + 1) % 10 == 0:
-                save_to_json(results, "quark_links_partial.json")
-            
-            # Polite delay between movies
-            time.sleep(2)
-
-        # Final Save
-        save_to_json(results, "quark_links.json")
-        
-        # Clean up partial file
-        if os.path.exists(os.path.join("output", "quark_links_partial.json")):
-            os.remove(os.path.join("output", "quark_links_partial.json"))
-
-        logger.info("="*30)
-        logger.info("All tasks completed.")
-        logger.info(f"Total Movies Processed: {len(movies)}")
-        logger.info(f"Results saved to output/quark_links.json")
-        logger.info("="*30)
-
+        if args.import_file:
+            library.merge(json.loads(args.import_file.read_text(encoding='utf-8')))
+        if args.url:
+            jobs.start('import', args.url, args.limit)
+            wait()
+            if jobs.snapshot()['message'].startswith('任务未完成'):
+                return 1
+        statuses = ('empty', 'error', 'blocked') if args.retry else ('pending', 'error', 'blocked')
+        if any(i['status'] in statuses for i in library.snapshot()['items']):
+            jobs.start('retry' if args.retry else 'search')
+            wait()
+        else:
+            print('没有待处理影片。可先导入片单，或使用 --retry。')
+        args.output.mkdir(parents=True, exist_ok=True)
+        (args.output / 'quark_links.json').write_text(json.dumps(library.snapshot()['items'], ensure_ascii=False, indent=2), encoding='utf-8')
+        items = library.snapshot()['items']
+        if jobs.snapshot()['message'].startswith('任务未完成') or any(i['status'] in ('error', 'blocked') for i in items):
+            return 1
+        return 0
     except KeyboardInterrupt:
-        logger.warning("User interrupted the process. Saving current progress...")
-        save_to_json(results, "quark_links_interrupted.json")
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        if 'results' in locals():
-            save_to_json(results, "quark_links_error.json")
+        jobs.pause()
+        print('已请求暂停。已完成的影片已保存在 library.json。')
+        return 130
+    except (ValueError, OSError) as exc:
+        print(f'未完成：{exc}')
+        return 1
     finally:
-        logger.info("Closing browser...")
-        driver.quit()
+        jobs.close()
 
-if __name__ == "__main__":
-    main()
+
+if __name__ == '__main__':
+    raise SystemExit(main())
