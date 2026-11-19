@@ -1,6 +1,6 @@
 # 想看 · 豆瓣 × 夸克片单工作台
 
-[English](./README.en.md) · [GitHub 仓库](https://github.com/holynova/douban-quark-clawer)
+[English](./README.en.md) · [GitHub 仓库](https://github.com/holynova/douban-quark-clawer) · [项目主页](https://douban-quark-clawer.xiaosang.cc/)
 
 把豆瓣「想看」、夸克候选链接和观影备注放在一个本地工作台里。原 `douban-quark-clawer` 的新版，保留 Python 命令行入口。
 

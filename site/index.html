@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="想看 · 豆瓣 × 夸克片单工作台，支持本地管理、断点续跑与导出。" />
+    <title>想看 · 豆瓣 × 夸克片单工作台</title>
+    <style>
+      :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f4f1eb; color: #27231f; }
+      main { width: min(720px, calc(100% - 40px)); padding: 48px 0; }
+      h1 { margin: 0 0 16px; font-size: clamp(2rem, 6vw, 4rem); letter-spacing: -0.04em; }
+      p { line-height: 1.75; }
+      .card { padding: 28px; border: 1px solid #d8d0c6; border-radius: 20px; background: #fffdf9; box-shadow: 0 16px 40px #4b362012; }
+      code { padding: 2px 6px; border-radius: 6px; background: #eee8df; }
+      a { color: #9b3d22; }
+      pre { overflow-x: auto; padding: 16px; border-radius: 12px; background: #27231f; color: #fff9ef; }
+      small { color: #71685f; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <p><small>v0.2.0 · Douban and Quark Workbench</small></p>
+        <h1>想看 · 豆瓣 × 夸克片单工作台</h1>
+        <p>导入豆瓣「想看」、片名或 JSON，在本地管理片单和候选链接。支持断点续跑、失败重试、整理备注和 JSON / CSV 导出。</p>
+        <p>解压后使用 Python 3.10 或更新版本安装依赖，然后在本机启动。自动搜索需要 Chrome。</p>
+        <pre>python -m pip install -r requirements.txt
+python server.py</pre>
+        <p><a href="https://github.com/holynova/douban-quark-clawer/releases/tag/v0.2.0">下载工作台</a> · <a href="https://github.com/holynova/douban-quark-clawer">查看完整使用说明</a></p>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 # Want to Watch · Douban and Quark Workbench
 
-[简体中文](./README.md) · [GitHub repository](https://github.com/holynova/douban-quark-clawer)
+[简体中文](./README.md) · [GitHub repository](https://github.com/holynova/douban-quark-clawer) · [Project page](https://douban-quark-clawer.xiaosang.cc/)
 
 Keep your watchlist, candidate Quark links, and notes in one local web app. The original Python command line is still available.
 
